@@ -1,0 +1,61 @@
+body {
+    background: #eee;
+}
+input {
+    margin: 0.5em 0;
+}
+.card {
+    padding: 2em;
+}
+.chat-content {
+    overflow-y: scroll;
+    height: 500px;
+	padding: 0.5em;
+}
+.chat-controls {
+    margin: 0.5em 0;
+}
+footer {
+    padding: 2em 0;
+}
+
+.speech-bubble {
+	position: relative;
+	background: #66ccff;
+	border-radius: .4em;
+	padding: 0.5em;
+	margin: 1em 0;
+}
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 5%;
+	width: 0;
+	height: 0;
+	border: 15px solid transparent;
+	border-top-color: #66ccff;
+	border-bottom: 0;
+	border-left: 0;
+	margin-left: -10px;
+	margin-bottom: -15px;
+}
+.speech-bubble.reverse {
+    background: #cccccc;
+}
+.speech-bubble.reverse:after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 95%;
+	width: 0;
+	height: 0;
+	border: 15px solid transparent;
+	border-top-color: #cccccc;
+	border-bottom: 0;
+	border-right: 0;
+	margin-left: -10px;
+	margin-bottom: -15px;
+}
+
+.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}

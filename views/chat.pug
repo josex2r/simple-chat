@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  .col-sm-12.col-md-10.offset-md-1
+    .card
+      .chat-content
+
+      .chat-controls.input-group
+        textarea.form-control(aria-label='Chat text')
+        .input-group-append
+          button#send.input-group-text.btn.btn-primary(type='button') Send
+  
+  script(type='text/javascript', src='javascripts/chat.js')
