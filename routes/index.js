@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
     } else {
         res.render('index', {
             title: 'Simple Chat',
-            error: !!req.query.error,
+            error: req.query.error,
             logout: !!req.query.logout
         });
     }

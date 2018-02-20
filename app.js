@@ -4,7 +4,7 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const cookieSession = require('cookie-session');
+const cookieSession = require('./lib/middlewares/cookie-session');
 
 const index = require('./routes/index');
 
@@ -20,11 +20,7 @@ app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cookieSession({
-  name: 'session',
-  keys: ['simple-chat'],
-  maxAge: 60 * 60 * 1000 // 1 hour
-}))
+app.use(cookieSession);
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);

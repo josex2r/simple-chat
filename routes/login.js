@@ -1,4 +1,5 @@
 const express = require('express');
+
 const router = express.Router();
 
 // Add auth middleware
@@ -10,12 +11,8 @@ router.post('/login', (req, res) => {
         req.sessionOptions.maxAge = 24 * 60 * 60 * 1000 // 24 hours
     }
     
-    if (true) {
-        req.session.user = name;
-        res.redirect('/chat');
-    } else {
-        res.redirect('/?error=true');
-    }
+    req.session.user = name;
+    res.redirect('/chat');
 });
  
 // Logout endpoint

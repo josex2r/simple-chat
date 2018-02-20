@@ -5,7 +5,7 @@ function addMessage(container, user, date, content, reverse) {
         bubble.classList.add('reverse');
     }
     bubble.classList.add('speech-bubble');
-    bubble.innerHTML = `By <small>REPLACE_USERNAME, ${date.toDateString()}</small><div>${content}</div>`;
+    bubble.innerHTML = `By <small>${user}, ${date.toDateString()}</small><div>${content}</div>`;
     
     container.appendChild(bubble);
 }
@@ -20,19 +20,52 @@ function addAlert(container, content, type = 'success') {
     container.appendChild(alert);
 }
 
-function sendMessage(message) {
-    alert(message)
+function clean(container) {
+    container.innerHTML = '';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Create the socket connection
+    const socket = io();
+    // DOM selectors
     const chatContent = document.querySelector('.chat-content');
     const chatText = document.querySelector('textarea');
     const button = document.querySelector('button#send');
+    // The conected username, currently is empty
+    let username;
     
-    addAlert(chatContent, 'Welcome to the <b>Simple chat</b>, REPLACE_USERNAME!');
-    addMessage(chatContent, 'REPLACE_USERNAME', new Date(), 'My message');
-    addMessage(chatContent, 'REPLACE_USERNAME', new Date(), 'Others message 1', true);
-    addMessage(chatContent, 'REPLACE_USERNAME', new Date(), 'Others message 2', true);
+    button.addEventListener('click', (event) => {
+        // Send the message to the server
+        socket.emit('message', chatText.value);
+        // Clean the <textarea>
+        chatText.value = '';
+    });
     
-    button.addEventListener('click', () => sendMessage(chatText.value));
+    socket.on('connect', () => {
+        // Clean all messages and add a green alert
+        clean(chatContent);
+        addAlert(chatContent, 'You have been connected!', 'info');
+    });
+    
+    socket.on('disconnect', ({ user }) => {
+        // Add a red alert
+        addAlert(chatContent, 'You have been disconnected :(', 'danger');
+    });
+    
+    socket.on('user', ({ user }) => {
+        // Store username
+        username = user;
+    });
+    
+    socket.on('messages', (messages) => {
+        // Loop over the messages
+        messages.forEach((data) => {
+            // For each message render a template
+            if (data.type === 'message') {
+                addMessage(chatContent, data.user, new Date(data.date), data.message, username !== data.user);
+            } else {
+                addAlert(chatContent, data.message, data.type);
+            }
+        });
+    });
 });
