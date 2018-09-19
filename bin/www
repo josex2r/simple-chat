@@ -5,7 +5,6 @@
  */
 
 var app = require('../app');
-var socket = require('../socket');
 var debug = require('debug')('simple-chat:server');
 var http = require('http');
 
@@ -21,8 +20,6 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-
-socket(server);
 
 /**
  * Listen on provided port, on all network interfaces.
