@@ -51,6 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // addMessage(chatContent, 'REPLACE_USERNAME', new Date(), 'Others message 2', true);
   const socket = io();
 
+  socket.on('alert', (type, text) => {
+    addAlert(chatContent, text, type);
+  });
+
   // Send a message to the server when the button is clicked
   button.addEventListener('click', () => {
     // Click callback
