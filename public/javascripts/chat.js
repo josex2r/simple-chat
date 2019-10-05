@@ -44,12 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatText = document.querySelector('textarea');
   const button = document.querySelector('button#send');
 
-  addAlert(chatContent, 'Waiting server handshake...');
+  // addAlert(chatContent, 'Waiting server handshake...', 'warning');
   // addAlert(chatContent, 'Welcome to the <b>Simple chat</b>, REPLACE_USERNAME!');
   // addMessage(chatContent, 'REPLACE_USERNAME', new Date(), 'My message');
   // addMessage(chatContent, 'REPLACE_USERNAME', new Date(), 'Others message 1', true);
   // addMessage(chatContent, 'REPLACE_USERNAME', new Date(), 'Others message 2', true);
-  
+  const socket = io();
+
   // Send a message to the server when the button is clicked
   button.addEventListener('click', () => {
     // Click callback
