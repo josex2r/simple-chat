@@ -55,8 +55,14 @@ document.addEventListener('DOMContentLoaded', () => {
     addAlert(chatContent, text, type);
   });
 
+  socket.on('receive-message', (text, user, date, reverse) => {
+    addMessage(chatContent, user, new Date(date), text, reverse);
+  });
+
   // Send a message to the server when the button is clicked
   button.addEventListener('click', () => {
     // Click callback
+    socket.emit('send-message', chatText.value);
+    chatText.value = '';
   });
 });

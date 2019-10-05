@@ -15,5 +15,11 @@ module.exports = (httpServer) => {
     // console.log('Se ha conectado el cliente ' + socket.id);
 
     socket.broadcast.emit('alert', 'info', `Se ha conectado el usuario "${user}"`);
+
+    socket.on('send-message', (text) => {
+      console.log('send-message', text);
+      socket.broadcast.emit('receive-message', text, user, new Date(), false);
+      socket.emit('receive-message', text, user, new Date(), true);
+    });
   });
 };
