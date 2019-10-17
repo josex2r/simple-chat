@@ -4,7 +4,6 @@
  * Module dependencies.
  */
 
-var socket = require('./socket');
 var debug = require('debug')('simple-chat:server');
 var http = require('http');
 var finalhandler = require('finalhandler');
@@ -25,8 +24,6 @@ var serve = serveStatic('public', {
 var server = http.createServer((req, res) => {
   serve(req, res, finalhandler(req, res));
 });
-
-socket(server);
 
 /**
  * Listen on provided port, on all network interfaces.
