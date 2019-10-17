@@ -4,23 +4,27 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var socket = require('../socket');
+var socket = require('./socket');
 var debug = require('debug')('simple-chat:server');
 var http = require('http');
+var finalhandler = require('finalhandler');
+var serveStatic = require('serve-static');
 
 /**
  * Get port from environment and store in Express.
  */
 
 var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
 
 /**
  * Create HTTP server.
  */
-
-var server = http.createServer(app);
+var serve = serveStatic('public', {
+  'index': ['index.html', 'index.htm']
+});
+var server = http.createServer((req, res) => {
+  serve(req, res, finalhandler(req, res));
+});
 
 socket(server);
 

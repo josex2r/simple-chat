@@ -1,5 +1,5 @@
 const SocketIo = require('socket.io');
-const cookieSession = require('./middlewares/cookie-session');
+const https = require('https');
 
 const ROOMS = ['general', 'developers', 'news', 'random'];
 const DEFAULT_ROOM = ROOMS[0];
@@ -7,14 +7,15 @@ const DEFAULT_ROOM = ROOMS[0];
 module.exports = function(server) {
   const io = SocketIo(server);
 
-  // Share session between express and socket.io to retrieve the username
-  // from the session cookie
   io.use((socket, next) => {
-    cookieSession(socket.request, socket.request.res, next);
+    socket.request.user = `RANDOM_NAME_${Math.random()}`;
+
+    next();
   });
 
   io.on('connection', (socket) => {
-    const user = socket.request.session.user;
+    const user = socket.request.user;
+
     console.log('connection', 'user:' + user)
 
     // Join to the default room
