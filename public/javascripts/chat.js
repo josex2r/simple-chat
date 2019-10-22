@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // addMessage(chatContent, 'REPLACE_USERNAME', new Date(), 'My message');
   // addMessage(chatContent, 'REPLACE_USERNAME', new Date(), 'Others message 1', true);
   // addMessage(chatContent, 'REPLACE_USERNAME', new Date(), 'Others message 2', true);
-  
+
   function joinRoom(newRoom) {
     socket.emit('change-room', currentRoom, newRoom);
     currentRoom = newRoom;
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.on('sent-message', ({ message, user, date }) => {
     addMessage(chatContent, user, new Date(date), message);
   });
-    
+
   // When you disconnects (for example, when the servers gets shutdown)
   socket.on('disconnect', () => {
     addAlert(chatContent, 'You have been disconnected :(', 'danger');
@@ -98,5 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Send a message to the server when the button is clicked
   button.addEventListener('click', () => {
     socket.emit('send-message', chatText.value, new Date(), currentRoom);
+    chatText.value = '';
   });
 });
