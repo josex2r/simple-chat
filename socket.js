@@ -1,5 +1,6 @@
 const SocketIo = require('socket.io');
 const https = require('https');
+const parseCookies = require('./lib/parse-cookies');
 
 const ROOMS = ['general', 'developers', 'news', 'random'];
 const DEFAULT_ROOM = ROOMS[0];
@@ -8,8 +9,9 @@ module.exports = function(server) {
   const io = SocketIo(server);
 
   io.use((socket, next) => {
-    socket.request.user = `RANDOM_NAME_${Math.random()}`;
+    const cookies = parseCookies(socket.request);
 
+    socket.request.user = cookies.user;
     next();
   });
 

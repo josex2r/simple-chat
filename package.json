@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "server": "nodemon --watch socket.js --watch public --watch app.js index.js",
+    "server": "nodemon --watch lib --watch socket.js --watch public --watch index.js index.js",
     "start": "./index.js"
   },
   "dependencies": {
