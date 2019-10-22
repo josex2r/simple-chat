@@ -4,24 +4,24 @@
  * Module dependencies.
  */
 
-var debug = require('debug')('simple-chat:server');
-var http = require('http');
-var finalhandler = require('finalhandler');
-var serveStatic = require('serve-static');
+const debug = require('debug')('simple-chat:server');
+const http = require('http');
+const finalhandler = require('finalhandler');
+const serveStatic = require('serve-static');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || '3000');
 
 /**
  * Create HTTP server.
  */
-var serve = serveStatic('public', {
+const serve = serveStatic('public', {
   'index': ['index.html', 'index.htm']
 });
-var server = http.createServer((req, res) => {
+const server = http.createServer((req, res) => {
   serve(req, res, finalhandler(req, res));
 });
 
@@ -38,7 +38,7 @@ server.on('listening', onListening);
  */
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+  const port = parseInt(val, 10);
 
   if (isNaN(port)) {
     // named pipe
@@ -62,7 +62,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
+  const bind = typeof port === 'string'
     ? 'Pipe ' + port
     : 'Port ' + port;
 
@@ -86,8 +86,8 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
+  const addr = server.address();
+  const bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);

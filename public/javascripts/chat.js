@@ -53,6 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Send a message to the server when the button is clicked
   button.addEventListener('click', () => {
-
+    chatText.value = '';
   });
 });
