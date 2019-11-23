@@ -24,9 +24,6 @@ module.exports = server => {
   });
 
   io.on('connection', socket => {
-    // returns socket's current room
-    // only supports 1 room chat's
-    const getCurrentRoom = socket => Object.keys(socket.rooms).pop();
     let currentRoom = DEFAULT_ROOM;
 
     // el nombre de usuario se mete en la
@@ -49,20 +46,21 @@ module.exports = server => {
     // emitimos las salas de chat disponibles
     updateRooms();
     
-    socket.emit('chat-ready', socket.id, currentRoom);
+    socket.emit('chat-ready', socket.id, currentRoom, userName);
     broadcastUserJoin(currentRoom);
     
     
     socket.on('send-message', message => {
-      // mensaje enviado por el usuario con true para pintar
-      // la burbuja hacia el otro lado
-      socket.emit('message-sent', userName, message, new Date(), true);
+      // confirmación de mensaje enviado para el usuario
+      socket.emit('message-sent', message, new Date());
+
       // mensaje para el resto de usuarios
-      socket.broadcast.emit('message-sent', userName, message, new Date());
+      socket.broadcast
+        .to(currentRoom)
+        .emit('message-sent', message, new Date(), userName);
     });
     
     socket.on('change-room', (from, to) => {
-      console.log(getCurrentRoom(socket))
       // salir del canal y avisar de que usuario se ha ido
       // no se manda el mensaje al que lo emite
       socket.leave(from);
@@ -70,6 +68,7 @@ module.exports = server => {
 
       // unirse a la nueva sala
       socket.join(to);
+      currentRoom = to;
 
       // avisar al usuario que ha cambiado de sala
       updateRooms(to);

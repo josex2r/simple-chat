@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatText = document.querySelector('textarea');
   const button = document.querySelector('button#send');
   let currentRoom;
+  let _userName;
 
   addAlert(chatContent, 'Waiting server handshake...');
   // addAlert(chatContent, 'Welcome to the <b>Simple chat</b>, REPLACE_USERNAME!');
@@ -74,8 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.emit('change-room', currentRoom, roomName);
   }
 
-  socket.on('chat-ready', (id, room) => {
+  socket.on('chat-ready', (id, room, userName) => {
     currentRoom = room;
+    _userName = userName;
     addAlert(
       chatContent,
       `Te has conectado al chat por el socket ${id}`,
@@ -84,17 +86,29 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   socket.on('user-join', (userName, itself) => {
-    const message = itself
-      ? `Te has unido al canal ${currentRoom}.`
-      : `${userName} se ha unido al canal.`;
-    addAlert(chatContent, message, 'info');
+    // el orden de esto puede afectar a la performance
+    const {message, alertType} = {
+      [!itself]: {
+        message: `${userName} se ha unido al canal.`,
+        alertType: 'info'
+      },
+      [!!itself]: {
+        message: `Te has unido al canal ${currentRoom}.`,
+        alertType: 'success'
+      },
+    }[true];
+
+    addAlert(chatContent, message, alertType);
   });
 
   socket.on('user-left', userName => {
     addAlert(chatContent, `${userName} se ha ido del canal`, 'info');
   });
 
-  socket.on('message-sent', (user, message, date, isOwn) => {
+  socket.on('message-sent', (message, date, user) => {
+    const isOwn = !user;
+    user = user || _userName;
+  
     addMessage(chatContent, user, new Date(date), message, isOwn);
   });
 
@@ -104,7 +118,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Send a message to the server when the button is clicked
   button.addEventListener('click', () => {
-    socket.emit('send-message', chatText.value);
-    chatText.value = '';
+    let value = chatText.value;
+    if (value) {
+      socket.emit('send-message', chatText.value);
+      chatText.value = '';
+    }
   });
 });
