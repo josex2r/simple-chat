@@ -5,9 +5,9 @@ const socketIo = require('socket.io');
 const cookie = require('./middlewares/cookie');
 
 const CHAT_ROOMS = [
-  'general',
-  'juegos',
-  'solterosDeOro'
+  'General',
+  'Juegos',
+  '+18'
 ];
 
 const DEFAULT_ROOM = CHAT_ROOMS[0];
