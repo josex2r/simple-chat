@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon --watch socket.js --watch middlewares --watch public --watch routes --watch views --watch app.js ./bin/www"
+    "start:dev": "nodemon --watch socket.js --watch middlewares --watch public --watch routes --watch views --watch app.js ./bin/www",
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
