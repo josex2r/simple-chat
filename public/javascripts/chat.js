@@ -49,7 +49,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // addMessage(chatContent, 'REPLACE_USERNAME', new Date(), 'My message');
   // addMessage(chatContent, 'REPLACE_USERNAME', new Date(), 'Others message 1', true);
   // addMessage(chatContent, 'REPLACE_USERNAME', new Date(), 'Others message 2', true);
-  
+
+  // conectamos el front con el socket. la librería mete la función io en window con
+  // lo que ya la temnemos disponible
+  const socket = io();
+
+  socket.on('chat-ready', id => {
+    addAlert(
+      chatContent,
+      `Te has conectado al chat por el socket ${id}`,
+      'success'
+    );
+  });
+
+  socket.on('user-join', userName => {
+    addAlert(chatContent, `${userName} se ha unido al chat`, 'info');
+  });
+
+
   // Send a message to the server when the button is clicked
   button.addEventListener('click', () => {
     // Click callback
