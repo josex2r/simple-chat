@@ -66,9 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
     addAlert(chatContent, `${userName} se ha unido al chat`, 'info');
   });
 
+  socket.on('sent-message', (user, message, date, isOwn) => {
+    addMessage(chatContent, user, new Date(date), message, isOwn);
+  });
+
 
   // Send a message to the server when the button is clicked
   button.addEventListener('click', () => {
-    // Click callback
+    socket.emit('send-message', chatText.value);
+    chatText.value = '';
   });
 });

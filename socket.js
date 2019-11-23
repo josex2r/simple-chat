@@ -19,6 +19,17 @@ module.exports = server => {
     // el nombre de usuario se mete en la
     // propiedad user de la cookie session
     socket.broadcast.emit('user-join', socket.request.session.user);
+
+    socket.on('send-message', message => {
+      console.log(message);
+      const user = socket.request.session.user;
+      // mensaje enviado por el usuario con true para pintar
+      // la burbuja hacia el otro lado
+      socket.emit('sent-message', user, message, new Date(), true);
+      // mensaje para el resto de usuarios
+      socket.broadcast.emit('sent-message', user, message, new Date());
+    });
+
   });
 };
 
