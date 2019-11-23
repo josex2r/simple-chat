@@ -1,0 +1,8 @@
+{
+    "app": { "region": "eu" },
+    "environments": {
+        "develop": {},
+        "release": {},
+        "production": {}
+    }
+}
