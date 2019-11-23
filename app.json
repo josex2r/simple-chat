@@ -1,8 +1,4 @@
 {
     "app": { "region": "eu" },
-    "environments": {
-        "develop": {},
-        "release": {},
-        "production": {}
-    }
+    "repository": "https://github.com/desche42/simple-chat"
 }
