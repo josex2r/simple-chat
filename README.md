@@ -11,7 +11,7 @@ El objetivo es crear un chat utilizando Web Sockets.
 > Por defecto la aplicación arrancará en el puerto **3000**.
 
 ```
-git clone https://github.com/josex2r/simple-chat.git
+git clone https://github.com/desche42/simple-chat.git
 cd simple-chat
 npm install
 npm start
