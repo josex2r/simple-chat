@@ -23,10 +23,15 @@ function addAlert(container, content, type = 'success') {
   alert.scrollIntoView();
 }
 
-function addRoom(container, name, callback) {
+function addRoom(container, name, callback, isCurrent) {
   const room = document.createElement('div');
 
   room.classList.add('room');
+
+  if (isCurrent) {
+    room.classList.add('current-room');
+  }
+
   room.innerHTML = name;
 
   container.appendChild(room);
@@ -35,7 +40,7 @@ function addRoom(container, name, callback) {
 }
 
 function clean(container) {
-    container.innerHTML = '';
+  container.innerHTML = '';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -43,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const roomsContent = document.querySelector('#rooms');
   const chatText = document.querySelector('textarea');
   const button = document.querySelector('button#send');
+  let currentRoom;
 
   addAlert(chatContent, 'Waiting server handshake...');
   // addAlert(chatContent, 'Welcome to the <b>Simple chat</b>, REPLACE_USERNAME!');
@@ -52,9 +58,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // conectamos el front con el socket. la librería mete la función io en window con
   // lo que ya la temnemos disponible
-  const socket = io('/customRoom');
+  const socket = io();
 
-  socket.on('chat-ready', id => {
+  // pintamos las salas disponibles en el fromt
+  socket.on('update-rooms', (rooms, currRoom) => {
+    currentRoom = currRoom;
+    roomsContent.innerHTML = '';
+    rooms.forEach(room => {
+      let isCurrent = currentRoom === room;
+      addRoom(roomsContent, room, changeRoomCallback(room), isCurrent)
+    });
+  });
+
+  const changeRoomCallback = roomName => () => {
+    socket.emit('change-room', currentRoom, roomName);
+  }
+
+  socket.on('chat-ready', (id, room) => {
+    currentRoom = room;
     addAlert(
       chatContent,
       `Te has conectado al chat por el socket ${id}`,
@@ -62,14 +83,24 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   });
 
-  socket.on('user-join', userName => {
-    addAlert(chatContent, `${userName} se ha unido al chat`, 'info');
+  socket.on('user-join', (userName, itself) => {
+    const message = itself
+      ? `Te has unido al canal ${currentRoom}.`
+      : `${userName} se ha unido al canal.`;
+    addAlert(chatContent, message, 'info');
   });
 
-  socket.on('sent-message', (user, message, date, isOwn) => {
+  socket.on('user-left', userName => {
+    addAlert(chatContent, `${userName} se ha ido del canal`, 'info');
+  });
+
+  socket.on('message-sent', (user, message, date, isOwn) => {
     addMessage(chatContent, user, new Date(date), message, isOwn);
   });
 
+  // socket.on('room-changed', (newRoom) => {
+  //   currentRoom = newRoom;
+  // });
 
   // Send a message to the server when the button is clicked
   button.addEventListener('click', () => {
