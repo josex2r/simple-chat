@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // conectamos el front con el socket. la librería mete la función io en window con
   // lo que ya la temnemos disponible
-  const socket = io();
+  const socket = io('/customRoom');
 
   socket.on('chat-ready', id => {
     addAlert(
