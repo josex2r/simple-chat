@@ -24,30 +24,35 @@ module.exports = server => {
   });
 
   io.on('connection', socket => {
+    // returns socket's current room
+    // only supports 1 room chat's
+    const getCurrentRoom = socket => Object.keys(socket.rooms).pop();
+    let currentRoom = DEFAULT_ROOM;
+
     // el nombre de usuario se mete en la
     // propiedad user de la cookie session
     const userName = socket.request.session.user;
 
     // emite evento para actualizar canales
-    const updateRooms = (current) => {
-      socket.emit('update-rooms', CHAT_ROOMS, current);
+    const updateRooms = (room = currentRoom) => {
+      socket.emit('update-rooms', CHAT_ROOMS, room);
     }
 
     // broadcast user join
-    const broadcastUserJoin = (to, name) => {
-      socket.broadcast.to(to).emit('user-join', name, false);
+    const broadcastUserJoin = (to) => {
+      socket.broadcast.to(to).emit('user-join', userName, false);
     }
 
 
     // unimos al canal general
-    socket.join(DEFAULT_ROOM);
+    socket.join(currentRoom);
     // emitimos las salas de chat disponibles
-    updateRooms(DEFAULT_ROOM);
-
-    socket.emit('chat-ready', socket.id, DEFAULT_ROOM);
-    broadcastUserJoin(DEFAULT_ROOM, userName);
-
-
+    updateRooms();
+    
+    socket.emit('chat-ready', socket.id, currentRoom);
+    broadcastUserJoin(currentRoom);
+    
+    
     socket.on('send-message', message => {
       // mensaje enviado por el usuario con true para pintar
       // la burbuja hacia el otro lado
@@ -55,8 +60,9 @@ module.exports = server => {
       // mensaje para el resto de usuarios
       socket.broadcast.emit('message-sent', userName, message, new Date());
     });
-
+    
     socket.on('change-room', (from, to) => {
+      console.log(getCurrentRoom(socket))
       // salir del canal y avisar de que usuario se ha ido
       // no se manda el mensaje al que lo emite
       socket.leave(from);
@@ -70,8 +76,9 @@ module.exports = server => {
       socket.emit('user-join', userName, true);
 
       // avisar a los miembros del canal excepto al emisor
-      broadcastUserJoin(to, userName);
+      broadcastUserJoin(to);
     });
   });
 };
+
 
